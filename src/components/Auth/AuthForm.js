@@ -17,6 +17,37 @@ const AuthForm = () => {
     const givenPassword=passwordRef.current.value;
     setisLoading(true);
     if (isLogin){
+        fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCQRrgkT4fxs2lThvvASjY6veknXkZZtn0', {
+      method: 'POST',
+      body: JSON.stringify({
+        email: givenEmail,
+        password: givenPassword,
+        returnSecureToken: true,
+      }),
+      headers: {
+        'Content-type': 'application/json',
+      },
+    })
+      .then((res) => {
+        setisLoading(false);
+        if (res.ok) {
+          return res.json().then((data) => {
+          
+            const idToken = data.idToken;
+            
+           
+          });
+        } else {
+          return res.json().then((data) => {
+            const errorMessage = data.error.message;
+            throw new Error (errorMessage);
+          });
+        }
+      })
+      .catch((error) => {
+        setisLoading(false);
+        console.log('Error:', error);
+      });
 
     }else{
       fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCQRrgkT4fxs2lThvvASjY6veknXkZZtn0',
