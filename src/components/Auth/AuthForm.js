@@ -1,4 +1,5 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback, useContext } from 'react';
+import { AuthContext } from './AuthContext';
 
 import classes from './AuthForm.module.css';
 
@@ -7,6 +8,7 @@ const AuthForm = () => {
   const passwordRef=useRef();
     const [isLogin, setIsLogin] = useState(true);
     const [isLoading,setisLoading]=useState(false);
+    const authContext=useContext(AuthContext);
 
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
@@ -15,6 +17,7 @@ const AuthForm = () => {
     event.preventDefault()
     const givenEmail=emailRef.current.value;
     const givenPassword=passwordRef.current.value;
+  
     setisLoading(true);
     if (isLogin){
         fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCQRrgkT4fxs2lThvvASjY6veknXkZZtn0', {
@@ -34,13 +37,18 @@ const AuthForm = () => {
           return res.json().then((data) => {
           
             const idToken = data.idToken;
-            
             console.log(idToken);
+            authContext.login(idToken)
+            
           });
         } else {
           return res.json().then((data) => {
-            const errorMessage = data.error.message;
-            throw new Error (errorMessage);
+          //  const errorMessage = data.error.message;
+          //  throw new Error (errorMessage);
+          let errorMessage='Authentication failed';
+alert(errorMessage)
+            console.log(data);
+            
           });
         }
       })
