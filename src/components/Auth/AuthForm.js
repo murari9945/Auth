@@ -35,7 +35,7 @@ const AuthForm = () => {
           
             const idToken = data.idToken;
             
-           
+            console.log(idToken);
           });
         } else {
           return res.json().then((data) => {
