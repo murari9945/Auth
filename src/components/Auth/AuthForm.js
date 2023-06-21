@@ -49,7 +49,7 @@ const AuthForm = () => {
               const idToken = data.idToken;
               console.log(idToken);
               authContext.login(idToken);
-              history.push('/profile');
+              history.push('/');
             });
           } else {
             return res.json().then((data) => {
