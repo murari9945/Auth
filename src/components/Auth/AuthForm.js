@@ -2,6 +2,7 @@ import { useState, useRef, useContext,useEffect } from 'react';
 import { AuthContext } from './AuthContext';
 import { useHistory } from 'react-router-dom';
 import classes from './AuthForm.module.css';
+import ProfileForm from '../Profile/ProfileForm';
 
 const AuthForm = () => {
   const emailRef = useRef();
@@ -9,23 +10,23 @@ const AuthForm = () => {
   const history = useHistory();
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setisLoading] = useState(false);
-  const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
-  const [passwordUpdated, setPasswordUpdated] = useState(false);
+  //const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
+ // const [passwordUpdated, setPasswordUpdated] = useState(false);
   const authContext = useContext(AuthContext);
-  const newPasswordRef = useRef();
+ // const newPasswordRef = useRef();
 
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
   };
-  const updatePasswordHandler = () => {
-    setIsUpdatingPassword(true);
-  };
+ // const updatePasswordHandler = () => {
+  //  setIsUpdatingPassword(true);
+ // };
 
   const submitHandler = (event) => {
     event.preventDefault();
     const givenEmail = emailRef.current.value;
     const givenPassword = passwordRef.current.value;
-    const newPassword = newPasswordRef.current.value;
+   // const newPassword = newPasswordRef.current.value;
 
     setisLoading(true);
 
@@ -93,42 +94,42 @@ const AuthForm = () => {
         });
     }
 
-    if (!isLogin && passwordUpdated) {
-      fetch(`https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyCQRrgkT4fxs2lThvvASjY6veknXkZZtn0`, {
-        method: 'POST',
-        body: JSON.stringify({
-          idToken: authContext.token,
-          password: newPassword,
-          returnSecureToken: true,
-        }),
-        headers: {
-          'Content-type': 'application/json',
-        },
-      })
-        .then((res) => {
-          setisLoading(false);
-          if (res.ok) {
+   // if (!isLogin && passwordUpdated) {
+    //  fetch(`https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyCQRrgkT4fxs2lThvvASjY6veknXkZZtn0`, {
+     //   method: 'POST',
+      //  body: JSON.stringify({
+       //   idToken: authContext.token,
+       //   password: newPassword,
+       //   returnSecureToken: true,
+      //  }),
+      //  headers: {
+      //    'Content-type': 'application/json',
+      //  },
+     // })
+      //  .then((res) => {
+       //   setisLoading(false);
+       //   if (res.ok) {
             // Password update successful
-             setPasswordUpdated(true);
+         //    setPasswordUpdated(true);
 
-            alert('Password updated successfully');
-          } else {
-            return res.json().then((data) => {
-              let errorMessage = 'Password update failed';
-              alert(errorMessage);
-              console.log(data);
-            });
-          }
-        })
-        .catch((error) => {
-          setisLoading(false);
-          console.log('Error:', error);
-        });
-    }
+         //   alert('Password updated successfully');
+//} else {
+           // return res.json().then((data) => {
+           //   let errorMessage = 'Password update failed';
+           //   alert(errorMessage);
+           //   console.log(data);
+           // });
+        //  }
+        //})
+      //  .catch((error) => {
+      //    setisLoading(false);
+        //  console.log('Error:', error);
+      //  });
+   // }
   };
-  useEffect(() => {
-    setPasswordUpdated(false); // Reset passwordUpdated state when switching login mode
-  }, [isLogin]);
+ // useEffect(() => {
+  //  setPasswordUpdated(false); // Reset passwordUpdated state when switching login mode
+ // }, [isLogin]);
 
   return (
     <section className={classes.auth}>
@@ -151,6 +152,7 @@ const AuthForm = () => {
           </button>
         </div>
       </form>
+      {authContext.isLoggedIn && <ProfileForm idToken={authContext.token}/>}
     </section>
   );
 };
